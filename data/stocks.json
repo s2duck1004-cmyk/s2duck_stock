@@ -1,0 +1,21 @@
+{
+  "updated_at": "아직 업데이트 전입니다",
+  "updated_at_kst": "업데이트 버튼을 눌러주세요",
+  "stocks": [],
+  "index": [
+    {"name": "KOSPI",  "val": 0, "chg": 0, "trend": []},
+    {"name": "KOSDAQ", "val": 0, "chg": 0, "trend": []}
+  ],
+  "market": {
+    "phase": "데이터 없음",
+    "dist_days": 0,
+    "ftd": false,
+    "advice": "업데이트 버튼을 눌러 데이터를 가져오세요"
+  },
+  "stats": {
+    "total": 0,
+    "up": 0,
+    "down": 0,
+    "pass_count": 0
+  }
+}
