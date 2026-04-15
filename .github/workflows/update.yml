@@ -25,7 +25,8 @@ jobs:
 
       - name: 📦 패키지 설치
         run: |
-          pip install yfinance numpy
+          pip install numpy requests
+
 
       - name: 📡 데이터 수집 실행
         run: |
