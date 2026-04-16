@@ -15,8 +15,6 @@ jobs:
       contents: write
 
     steps:
-        env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: 📥 코드 체크아웃
         uses: actions/checkout@v4
 
@@ -35,6 +33,10 @@ jobs:
           KIS_APP_SECRET: ${{ secrets.KIS_APP_SECRET }}
         run: |
           python fetch_data.py
+
+      - name: 🔑 토큰 주입
+        run: |
+          sed -i "s|window._ghToken = ''|window._ghToken = '${{ secrets.GH_TOKEN }}'|g" index.html || true
 
       - name: 💾 데이터 커밋 & 푸시
         run: |
