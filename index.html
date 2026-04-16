@@ -715,7 +715,67 @@ function highlightCS(l) {
 // ════════════════════════════════════════════
 //  BOOT
 // ════════════════════════════════════════════
+// ════════════════════════════════════════════
+//  GitHub Actions 자동 실행
+// ════════════════════════════════════════════
+const GH_OWNER  = 's2duck1004-cmyk';
+const GH_REPO   = 's2duck_stock';
+const GH_TOKEN  = ''; // 보안상 비워둠 — Secrets에서 주입
+
+async function triggerWorkflow() {
+  const btn = document.getElementById('actionBtn');
+  btn.textContent = '⟳ 업데이트 중...';
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/update.yml/dispatches`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${window._ghToken || ''}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ref: 'main' }),
+      }
+    );
+
+    if (res.status === 204) {
+      showToast('✅ 업데이트 시작! 2~3분 후 새로고침하세요');
+      // 3분 후 자동 새로고침
+      setTimeout(() => {
+        loadData();
+        showToast('🔄 데이터 새로고침 완료!');
+      }, 180000);
+    } else {
+      throw new Error('API 오류: ' + res.status);
+    }
+  } catch(e) {
+    showToast('❌ 오류: ' + e.message);
+  } finally {
+    setTimeout(() => {
+      btn.textContent = '▶ 데이터 업데이트';
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    }, 5000);
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+  // GH_TOKEN Secret을 meta 태그로 주입받음
+  const meta = document.querySelector('meta[name="gh-token"]');
+  if (meta) window._ghToken = meta.content;
+
+  // 버튼을 링크 대신 함수 호출로 변경
+  const btn = document.getElementById('actionBtn');
+  if (btn) {
+    btn.removeAttribute('href');
+    btn.removeAttribute('target');
+    btn.onclick = (e) => { e.preventDefault(); triggerWorkflow(); };
+  }
+
   loadData();
 });
 </script>
